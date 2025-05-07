@@ -15,7 +15,6 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/", userRoute);
 app.use("/users", userRoute);
 app.use("/workouts", workoutRoute);
 
