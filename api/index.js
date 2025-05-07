@@ -15,10 +15,8 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/", userRoute);
-app.use("/SecuredRoute", userRoute);
-app.use("/users", userRoute);
-app.use("/workouts", workoutRoutes);
+app.use("/api", userRoute);
+app.use("/api", workoutRoutes);
 
 app.get("/", (req, res) => {
     res.send("EXPRESS BACKEND COM POSTGRESQL");
