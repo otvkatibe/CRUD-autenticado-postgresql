@@ -15,12 +15,8 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api/users", userRoute);
-app.use("/api/workouts", workoutRoutes);
-
-app.get("/", (req, res) => {
-    res.send("EXPRESS BACKEND COM POSTGRESQL");
-});
+app.use("/users", userRoute);
+app.use("/workouts", workoutRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
