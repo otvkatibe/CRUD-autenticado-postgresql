@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { getAllUsersService, findUserByUsername, createUser} from '../services/user.service.js';
+import { findUserByUsername, createUser} from '../services/user.service.js';
 import jwt from 'jsonwebtoken';
 
 const register = async (req, res) => {
@@ -17,7 +17,7 @@ const register = async (req, res) => {
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
     if (!passwordRegex.test(req.body.password)) {
         console.error("Invalid password format:", req.body.password);
-        return res.status(400).json({ message: 'Invalid password format. Password must be at least 8 characters long and include at least one letter and one number.' });
+        return res.status(400).json({ message: 'Invalid password format.' });
     }
 
     const { username, email, password } = req.body;
@@ -80,25 +80,7 @@ const login = async (req, res) => {
     }
 }
 
-const getAllUsers = async (req, res) => {
-    try {
-        console.log("Fetching all users");
-        const users = await getAllUsersService();
-        if (!users || users.length === 0) {
-            console.log("No users found");
-            return res.status(404).json({ message: 'No users found' });
-        }
-        console.log("Users found:", users);
-        res.status(200).json(users);
-    }
-    catch (error) {
-        console.error("Error fetching users:", error);
-        return res.status(500).json({ message: `Error fetching users: ${error}` });
-    }
-}
-
 export default { 
     register,
-    login,
-    getAllUsers
+    login
 };

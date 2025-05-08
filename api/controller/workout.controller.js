@@ -1,6 +1,5 @@
 import * as workoutService from '../services/workout.service.js';
 import { validate as isUUID } from 'uuid';
-import { logAction, logError } from '../middlewares/logger.js';
 
 const validateRequiredFields = (fields, body) => {
     const missingFields = fields.filter((field) => !body[field]);
@@ -35,8 +34,8 @@ const validateRequestBody = (body) => {
 };
 
 export const createWorkout = async (req, res) => {
+    const { id: userId } = req.user; // Mover para fora do bloco try
     try {
-        const { id: userId } = req.user;
         const requiredFields = ['name', 'duration', 'date'];
         const validationError = validateRequiredFields(requiredFields, req.body);
         if (validationError) {
@@ -49,10 +48,10 @@ export const createWorkout = async (req, res) => {
         }
 
         const workout = await workoutService.createWorkout({ ...req.body, userId });
-        logAction('Treino criado com sucesso.', userId, req.originalUrl);
+        console.log(`[AÇÃO] ${new Date().toISOString()} - Usuário: ${userId} - Endpoint: /workouts - Treino criado com sucesso.`);
         res.status(201).json(workout);
     } catch (error) {
-        logError(error, req.user?.id, req.originalUrl);
+        console.error(`[ERRO] ${new Date().toISOString()} - Usuário: ${userId} - Endpoint: /workouts - Erro: ${error.message}`);
         res.status(500).json({ message: 'Erro interno ao criar treino.' });
     }
 };
@@ -82,10 +81,10 @@ export const getWorkout = async (req, res) => {
             return res.status(404).json({ message: 'Treino não encontrado ou não pertence ao usuário.' });
         }
 
-        logAction('Treino recuperado com sucesso.', userId, req.originalUrl);
+        console.log(`[AÇÃO] ${new Date().toISOString()} - Usuário: ${userId} - Endpoint: ${endpoint} - ${message}`);
         res.status(200).json(workout);
     } catch (error) {
-        logError(error, req.user?.id, req.originalUrl);
+        console.error(`[ERRO] ${new Date().toISOString()} - Usuário: ${userId} - Endpoint: ${endpoint} - Erro: ${error.message}`);
         res.status(500).json({ message: 'Erro interno ao buscar treino.' });
     }
 };
@@ -114,7 +113,7 @@ export const updateWorkout = async (req, res) => {
     }
 };
 
-export const patchWorkout = async (req, res) => {
+/*export const patchWorkout = async (req, res) => {
     try {
         const formatError = validateRequestBody(req.body);
         if (formatError) {
@@ -130,7 +129,7 @@ export const patchWorkout = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Erro ao atualizar treino parcialmente.' });
     }
-};
+};*/
 
 export const deleteWorkout = async (req, res) => {
     try {
@@ -147,10 +146,10 @@ export const deleteWorkout = async (req, res) => {
         }
 
         await workoutService.deleteWorkout(id, userId);
-        logAction('Treino removido com sucesso.', userId, req.originalUrl);
+        console.log(`[AÇÃO] ${new Date().toISOString()} - Usuário: ${userId} - Endpoint: ${endpoint} - ${message}`);
         res.status(200).json({ message: 'Treino removido com sucesso.' });
     } catch (error) {
-        logError(error, req.user?.id, req.originalUrl);
+        console.error(`[ERRO] ${new Date().toISOString()} - Usuário: ${userId} - Endpoint: ${endpoint} - Erro: ${error.message}`);
         res.status(500).json({ message: 'Erro interno ao remover treino.' });
     }
 };

@@ -10,7 +10,7 @@ router.post('/', workoutController.createWorkout);
 router.get('/', workoutController.getWorkouts);
 router.get('/:id', workoutController.getWorkout);
 router.put('/:id', workoutController.updateWorkout);
-router.patch('/:id', workoutController.patchWorkout);
+//router.patch('/:id', workoutController.patchWorkout);
 router.delete('/:id', workoutController.deleteWorkout);
 
 export default router;
