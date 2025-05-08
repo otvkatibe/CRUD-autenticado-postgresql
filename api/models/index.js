@@ -1,7 +1,8 @@
 import Sequelize from 'sequelize';
 import dbConfig from '../config/db.config.js';
-import UserModel from './User.js';
-import WorkoutModel from './Workout.js';
+import User from './User.js';
+import Workout from './Workout.js';
+import pg from 'pg';
 
 const sequelize = new Sequelize(
     dbConfig.database,
@@ -11,26 +12,25 @@ const sequelize = new Sequelize(
         host: dbConfig.host,
         dialect: dbConfig.dialect,
         port: dbConfig.port,
+        dialectModule: pg,
         pool: {
             max: dbConfig.pool.max,
             min: dbConfig.pool.min,
             acquire: dbConfig.pool.acquire,
             idle: dbConfig.pool.idle,
+            evict: dbConfig.pool.evict,
         },
     }
 );
 
-const User = UserModel(sequelize, Sequelize);
-const Workout = WorkoutModel(sequelize, Sequelize);
+const db = {};
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-User.hasMany(Workout, { foreignKey: 'userId', as: 'workouts' });
-Workout.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+db.users = User(sequelize, Sequelize);
+db.workouts = Workout(sequelize, Sequelize);
 
-const db = {
-    sequelize,
-    Sequelize,
-    User,
-    Workout,
-};
+db.users.hasMany(db.workouts, { foreignKey: 'userId', as: 'workouts' });
+db.workouts.belongsTo(db.users, { foreignKey: 'userId', as: 'user' });
 
 export default db;
