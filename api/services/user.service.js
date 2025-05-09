@@ -1,6 +1,6 @@
 import db from '../models/index.js';
 
-const User = db.User;
+const User = db.users;
 
 export const getAllUsersService = async () => {
     return await User.findAll();
