@@ -1,4 +1,4 @@
-curl -X POST http://localhost:3000/users/register \
+curl -X POST https://crud-autenticado-postgresql.vercel.app/users/register \
 -H "Content-Type: application/json" \
 -d '{
     "username": "testuser",

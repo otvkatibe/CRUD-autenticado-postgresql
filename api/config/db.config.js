@@ -9,6 +9,12 @@ const dbConfig = {
     database: process.env.POSTGRES_DATABASE,
     port: process.env.POSTGRES_PORT,
     dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    },
     pool: {
         max: 2,
         min: 0,
